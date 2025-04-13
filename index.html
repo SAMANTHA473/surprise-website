@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Surprise!</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      background-color: #fff0f5;
+      margin-top: 100px;
+    }
+
+    #surpriseContent {
+      display: none;
+      margin-top: 30px;
+    }
+
+    #flower {
+      width: 150px;
+      height: auto;
+      margin: 20px 0;
+      animation: popIn 1s ease-out;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .note {
+      font-size: 20px;
+      color: #c71585;
+    }
+
+    .name {
+      font-size: 28px;
+      font-weight: bold;
+      color: #ff1493;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #ff1493;
+    }
+  </style>
+</head>
+<body>
+  <h1>Click to Open Your Surprise!</h1>
+  <button onclick="showSurprise()">Open Surprise</button>
+
+  <div id="surpriseContent">
+    <img id="flower" src="https://i.imgur.com/1Q9Z1ZV.png" alt="Flower" />
+    <div class="name">HANNABEE</div>
+    <div class="note">Hi! Hope this made you smile!</div>
+  </div>
+
+  <script>
+    function showSurprise() {
+      document.getElementById("surpriseContent").style.display = "block";
+    }
+  </script>
+</body>
+</html>
