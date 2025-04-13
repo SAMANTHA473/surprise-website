@@ -88,9 +88,15 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
-    /* Hide the YouTube iframe */
-    #youtubeAudio {
+    /* Controls */
+    #audioControls {
+      margin-top: 20px;
       display: none;
+      font-size: 20px;
+    }
+
+    #audioDuration {
+      font-weight: bold;
     }
 
   </style>
@@ -101,23 +107,53 @@
   <button onclick="showSurprise()">Open Surprise</button>
 
   <div id="surpriseContent">
-    <div class="name">HANNABEE</div>
+    <div class="name">[Insert Name Here]</div>
     <img id="surpriseImage" src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" alt="Surprise Image" />
     <div class="note">Hi! Hope this made you smile!</div>
   </div>
 
-  <!-- YouTube iframe for the audio -->
-  <iframe id="youtubeAudio" width="0" height="0" 
-    src="https://www.youtube.com/embed/yAW_8nn1_2M?autoplay=1&mute=1&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <!-- Audio player -->
+  <audio id="audioPlayer" preload="auto" autoplay>
+    <source src="https://www.youtube.com/watch?v=yAW_8nn1_2M" type="audio/mpeg">
+    Your browser does not support the audio tag.
+  </audio>
+
+  <!-- Audio Controls -->
+  <div id="audioControls">
+    <button onclick="playPauseAudio()">Play/Pause</button>
+    <p>Duration: <span id="audioDuration">0:00</span></p>
+  </div>
 
   <script>
-    function showSurprise() {
-      // Show the surprise content
-      document.getElementById("surpriseContent").style.display = "block";
+    let audio = document.getElementById("audioPlayer");
+    let audioControls = document.getElementById("audioControls");
+    let audioDuration = document.getElementById("audioDuration");
 
-      // Play YouTube video (audio only)
-      var audio = document.getElementById("youtubeAudio");
-      audio.style.display = "block";  // Ensure it plays
+    // Show surprise and play audio
+    function showSurprise() {
+      // Show surprise content
+      document.getElementById("surpriseContent").style.display = "block";
+      audioControls.style.display = "block"; // Show audio controls
+
+      // Start audio playback
+      audio.play();
+
+      // Update audio duration once metadata is loaded
+      audio.onloadedmetadata = function() {
+        let duration = audio.duration;
+        let minutes = Math.floor(duration / 60);
+        let seconds = Math.floor(duration % 60);
+        audioDuration.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+      };
+    }
+
+    // Play/Pause Audio
+    function playPauseAudio() {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
     }
   </script>
 
