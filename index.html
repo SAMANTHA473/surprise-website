@@ -8,7 +8,6 @@
       text-align: center;
       font-family: 'Arial', sans-serif;
       background: #2b2d42;
-      background-size: cover;
       color: #fff;
       margin: 0;
       padding: 0;
@@ -88,17 +87,9 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
-    /* Controls */
-    #audioControls {
-      margin-top: 20px;
+    audio {
       display: none;
-      font-size: 20px;
     }
-
-    #audioDuration {
-      font-weight: bold;
-    }
-
   </style>
 </head>
 <body>
@@ -112,53 +103,28 @@
     <div class="note">Hi! Hope this made you smile!</div>
   </div>
 
-  <!-- Audio player -->
-  <audio id="audioPlayer" preload="auto" autoplay>
-    <source src="https://www.youtube.com/watch?v=yAW_8nn1_2M" type="audio/mpeg">
+  <!-- Audio element -->
+  <audio id="audioPlayer">
+    <source src="Hanap-Hanap.mp3" type="audio/mpeg">
     Your browser does not support the audio tag.
   </audio>
 
-  <!-- Audio Controls -->
-  <div id="audioControls">
-    <button onclick="playPauseAudio()">Play/Pause</button>
-    <p>Duration: <span id="audioDuration">0:00</span></p>
-  </div>
-
   <script>
-    let audio = document.getElementById("audioPlayer");
-    let audioControls = document.getElementById("audioControls");
-    let audioDuration = document.getElementById("audioDuration");
-
-    // Show surprise and play audio
     function showSurprise() {
-      // Show surprise content
+      // Show the content
       document.getElementById("surpriseContent").style.display = "block";
-      audioControls.style.display = "block"; // Show audio controls
 
-      // Start audio playback
-      audio.play();
-
-      // Update audio duration once metadata is loaded
-      audio.onloadedmetadata = function() {
-        let duration = audio.duration;
-        let minutes = Math.floor(duration / 60);
-        let seconds = Math.floor(duration % 60);
-        audioDuration.textContent = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-      };
-    }
-
-    // Play/Pause Audio
-    function playPauseAudio() {
-      if (audio.paused) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
+      // Play the audio
+      const audio = document.getElementById("audioPlayer");
+      audio.play().catch((e) => {
+        console.log("Audio playback failed:", e);
+      });
     }
   </script>
 
 </body>
 </html>
+
 
 
 
