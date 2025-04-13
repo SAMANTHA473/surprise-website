@@ -16,11 +16,13 @@
       margin-top: 30px;
     }
 
-    #flower {
-      width: 150px;
+    #surpriseImage {
+      width: 250px;
       height: auto;
       margin: 20px 0;
       animation: popIn 1s ease-out;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     @keyframes popIn {
@@ -31,6 +33,7 @@
     .note {
       font-size: 20px;
       color: #c71585;
+      margin-top: 10px;
     }
 
     .name {
@@ -59,7 +62,7 @@
   <button onclick="showSurprise()">Open Surprise</button>
 
   <div id="surpriseContent">
-    <img id="flower" src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" alt="Flower" />
+    <img id="surpriseImage" src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" alt="Surprise Image" />
     <div class="name">HANNABEE</div>
     <div class="note">Hi! Hope this made you smile!</div>
   </div>
@@ -71,3 +74,4 @@
   </script>
 </body>
 </html>
+
