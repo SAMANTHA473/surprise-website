@@ -1,36 +1,233 @@
-function drawMaze() {
-  ctx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Surprise</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: #1e1e2f;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
 
-  for (let y = 0; y < maze.length; y++) {
-    for (let x = 0; x < maze[y].length; x++) {
-      const cell = maze[y][x];
+    #startScreen, #messageContainer {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
 
-      // Base cell colors
-      if (cell === 1) {
-        ctx.fillStyle = "#333"; // Wall
-      } else if (cell === 2) {
-        ctx.fillStyle = "#fff"; // Goal background
-      } else {
-        ctx.fillStyle = "#fff"; // Path
-      }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ff1493;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
-      ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    #mazeContainer {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
 
-      // Draw flag if goal
-      if (cell === 2) {
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "#4CAF50";
-        ctx.fillText("🚩", x * cellSize + 10, y * cellSize + 35);
+    canvas {
+      border: 4px solid #ff1493;
+      background-color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .ctrl-btn {
+      font-size: 24px;
+      padding: 10px 15px;
+      border-radius: 10px;
+      background: #444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #messageContainer {
+      display: none;
+      background-color: #1e1e2f;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #finalMessage {
+      font-size: 24px;
+      margin-top: 30px;
+      color: #ff69b4;
+      white-space: pre-wrap;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: red;
+      top: 0;
+      animation: fall 3s linear forwards;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotateZ(360deg);
+        opacity: 0;
       }
     }
-  }
+  </style>
+</head>
+<body>
 
-  // Draw player
-  ctx.fillStyle = "#ff1493";
-  ctx.beginPath();
-  ctx.arc(player.x * cellSize + 25, player.y * cellSize + 25, 15, 0, Math.PI * 2);
-  ctx.fill();
-}
+  <div id="startScreen">
+    <h1>Click to Open Your Surprise!</h1>
+    <button onclick="startMaze()">Open Surprise</button>
+  </div>
+
+  <div id="mazeContainer">
+    <canvas id="mazeCanvas" width="400" height="400"></canvas>
+    <div class="controls">
+      <button class="ctrl-btn" onclick="movePlayer('up')">⬆️</button>
+      <div>
+        <button class="ctrl-btn" onclick="movePlayer('left')">⬅️</button>
+        <button class="ctrl-btn" onclick="movePlayer('down')">⬇️</button>
+        <button class="ctrl-btn" onclick="movePlayer('right')">➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="messageContainer">
+    <h2>Congratulations! 🎉</h2>
+    <div id="finalMessage"></div>
+  </div>
+
+  <audio id="audioPlayer">
+    <source src="Hanap-Hanap.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const maze = [
+      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,0,1],
+      [1,0,1,0,0,0,1,0,0,1],
+      [1,0,1,1,1,1,1,0,1,1],
+      [1,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,2,1],
+      [1,1,1,1,1,1,1,1,1,1],
+    ];
+
+    const canvas = document.getElementById("mazeCanvas");
+    const ctx = canvas.getContext("2d");
+    const cellSize = 40;
+
+    let player = { x: 1, y: 1 };
+
+    function startMaze() {
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("mazeContainer").style.display = "flex";
+      drawMaze();
+    }
+
+    function drawMaze() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === 1) {
+            ctx.fillStyle = "#444";
+          } else {
+            ctx.fillStyle = "#fff";
+          }
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+
+          if (maze[y][x] === 2) {
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            ctx.font = "30px Arial";
+            ctx.fillStyle = "#4CAF50";
+            ctx.fillText("🚩", x * cellSize + 6, y * cellSize + 30);
+          }
+        }
+      }
+
+      // Draw player
+      ctx.beginPath();
+      ctx.fillStyle = "#ff1493";
+      ctx.arc(player.x * cellSize + 20, player.y * cellSize + 20, 15, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function movePlayer(dir) {
+      let newX = player.x;
+      let newY = player.y;
+
+      if (dir === "up") newY--;
+      else if (dir === "down") newY++;
+      else if (dir === "left") newX--;
+      else if (dir === "right") newX++;
+
+      if (maze[newY][newX] !== 1) {
+        player.x = newX;
+        player.y = newY;
+        drawMaze();
+
+        if (maze[newY][newX] === 2) {
+          setTimeout(endMaze, 300);
+        }
+      }
+    }
+
+    function endMaze() {
+      document.getElementById("mazeContainer").style.display = "none";
+      document.getElementById("messageContainer").style.display = "flex";
+      launchConfetti();
+      document.getElementById("audioPlayer").play();
+      typeMessage("Hi! Hope this made you smile! 😊\n\nYou deserve all the best surprises in life ✨");
+    }
+
+    function typeMessage(text) {
+      const msg = document.getElementById("finalMessage");
+      let index = 0;
+      msg.innerHTML = "";
+      const interval = setInterval(() => {
+        msg.innerHTML += text[index];
+        index++;
+        if (index === text.length) clearInterval(interval);
+      }, 50);
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 100; i++) {
+        let confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * 100 + "vw";
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+        document.body.appendChild(confetti);
+
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+  </script>
+</body>
+</html>
 
 
 
