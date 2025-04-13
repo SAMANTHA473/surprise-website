@@ -125,13 +125,14 @@
   <script>
     const maze = [
       [1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,0,0,0,1],
-      [1,0,1,0,1,0,1,1,0,1],
-      [1,0,1,0,0,0,1,0,0,1],
-      [1,0,1,1,1,1,1,0,1,1],
-      [1,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,2,1],
-      [1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,1,0,0,0,1,0,1],
+      [1,1,0,1,0,1,0,1,0,1],
+      [1,0,0,0,0,1,0,0,0,1],
+      [1,0,1,1,0,1,1,1,0,1],
+      [1,0,1,0,0,0,0,1,0,1],
+      [1,0,1,0,1,1,0,1,0,1],
+      [1,0,0,0,1,2,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1]
     ];
 
     const canvas = document.getElementById("mazeCanvas");
@@ -199,7 +200,7 @@
       document.getElementById("messageContainer").style.display = "flex";
       launchConfetti();
       document.getElementById("audioPlayer").play();
-      typeMessage("Hi! Hope this made you smile! 😊\n\nYou deserve all the best surprises in life ✨");
+      typeMessage("FOR (NAME)\n\nCongratulations! 🎉\nHi! Hope this made you smile! 😊\n\nYou deserve all the best surprises in life ✨");
     }
 
     function typeMessage(text) {
@@ -210,7 +211,7 @@
         msg.innerHTML += text[index];
         index++;
         if (index === text.length) clearInterval(interval);
-      }, 50);
+      }, 100); // 100ms typing speed ~ 10 seconds total
     }
 
     function launchConfetti() {
@@ -228,6 +229,7 @@
   </script>
 </body>
 </html>
+
 
 
 
