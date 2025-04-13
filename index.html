@@ -75,6 +75,8 @@
       margin-top: 30px;
       color: #ff69b4;
       white-space: pre-wrap;
+      max-width: 90%;
+      text-align: justify;
     }
 
     .confetti {
@@ -168,7 +170,6 @@
         }
       }
 
-      // Draw player
       ctx.beginPath();
       ctx.fillStyle = "#ff1493";
       ctx.arc(player.x * cellSize + 20, player.y * cellSize + 20, 15, 0, Math.PI * 2);
@@ -200,7 +201,20 @@
       document.getElementById("messageContainer").style.display = "flex";
       launchConfetti();
       document.getElementById("audioPlayer").play();
-      typeMessage("FOR HANNABEE \n\nCongratulations! 🎉\nHi! Hope this made you smile! 😊\nWala lang trip ko lang gumawa ng mga ganto pero para sayo talaga to lagi \nHAHAHAHA. Diko kasi alam kung kelan mawawala ung feelings ko \n for you kaya hanggang crush pa kita binibigay ko lang ung best ko na ipakita sayo, \nsabihin mo lang minsan kung annoying na ahhh!!\n Sana okay ka lang parati and ligtas ka continue mo lang ung journey mo sa \ndancing \nhanggang di mo nakaka sayaw si niana and also i hope na \nmadagdagan pa ung mga pag gala natin or tambay lalo pag nasa lolomboy ako \npumayag ka minsan tumambay don yun lang.\nSend ko sayo to after 2days ko gawin HAHAHA \n You deserve all the best surprises in life ✨");
+      typeMessage(`FOR HANNABEE <br><br>
+        Congratulations! 🎉<br>
+        Hi! Hope this made you smile! 😊<br><br>
+        Wala lang, trip ko lang gumawa ng mga gan'to pero para sayo talaga 'to lagi.<br>
+        HAHAHAHA. Di ko kasi alam kung kelan mawawala 'yung feelings ko for you,<br>
+        kaya habang crush pa kita, binibigay ko lang 'yung best ko para ipakita sayo.<br>
+        Sabihin mo lang minsan kung annoying na ahhh!! 😅<br><br>
+        Sana okay ka lang parati at ligtas ka.<br>
+        Continue mo lang 'yung journey mo sa dancing,<br>
+        hanggang di mo pa nakakasayaw si Niana! 💃<br><br>
+        I also hope na madagdagan pa 'yung mga gala natin or tambay, lalo pag nasa Lolomboy ako.<br>
+        Pumayag ka minsan tumambay don, please? 😄<br><br>
+        Send ko sayo 'to after 2 days ko gawin, HAHAHA.<br><br>
+        You deserve all the best surprises in life ✨`);
     }
 
     function typeMessage(text) {
@@ -211,7 +225,7 @@
         msg.innerHTML += text[index];
         index++;
         if (index === text.length) clearInterval(interval);
-      }, 100); // 100ms typing speed ~ 10 seconds total
+      }, 50); // slower typing effect ~10s duration
     }
 
     function launchConfetti() {
