@@ -2,26 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Surprise!</title>
+  <title>Maze Surprise</title>
   <style>
     body {
-      text-align: center;
-      font-family: 'Arial', sans-serif;
-      background: #2b2d42;
-      color: #fff;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
       margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #1a1a2e;
+      color: white;
+      overflow: hidden;
+    }
+
+    .center {
+      text-align: center;
+      padding-top: 100px;
     }
 
     h1 {
-      font-size: 36px;
       color: #ff1493;
-      margin-bottom: 20px;
+      font-size: 40px;
     }
 
     button {
@@ -35,70 +33,214 @@
       font-weight: bold;
     }
 
-    #surpriseContent {
+    #mazeContainer, #messageContainer {
       display: none;
-      margin-top: 30px;
-      animation: fadeIn 1.5s ease;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    canvas {
+      background-color: #fff;
+      border: 4px solid #ff1493;
+      margin-bottom: 10px;
     }
 
-    .name {
-      font-size: 32px;
-      margin-top: 10px;
+    #controller {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ctrl-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .ctrl-btn {
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      background: #ff69b4;
+      border: none;
+      border-radius: 15px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .typing-text {
+      font-size: 24px;
+      width: 80%;
       color: #ff69b4;
+      text-align: center;
+      white-space: pre-wrap;
+      overflow: hidden;
+      border-right: 2px solid #fff;
+      animation: typing 4s steps(40, end), blink 0.75s step-end infinite;
     }
 
-    .note {
-      font-size: 20px;
-      margin-top: 10px;
-      color: #ffb6c1;
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 80%; }
     }
 
-    #surpriseImage {
-      width: 300px;
-      margin-top: 15px;
-      border-radius: 10px;
+    @keyframes blink {
+      50% { border-color: transparent; }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff69b4;
+      animation: confetti-fall 3s linear infinite;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Click to Open Your Surprise!</h1>
-  <button onclick="showSurprise()">Open Surprise</button>
-
-  <div id="surpriseContent">
-    <div class="name">[Insert Name Here]</div>
-    <img id="surpriseImage" src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" alt="Surprise Image">
-    <div class="note">Hi! Hope this made you smile!</div>
+  <div class="center" id="startScreen">
+    <h1>Click to Open Your Surprise!</h1>
+    <button onclick="startMaze()">Open Surprise</button>
   </div>
 
-  <!-- AUDIO -->
+  <div id="mazeContainer">
+    <canvas id="mazeCanvas" width="400" height="400"></canvas>
+    <p style="color:#ff69b4;">Use arrow keys or buttons to reach the goal!</p>
+    
+    <!-- On-screen controller -->
+    <div id="controller">
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="movePlayer('up')">↑</button>
+      </div>
+      <div class="ctrl-row">
+        <button class="ctrl-btn" onclick="movePlayer('left')">←</button>
+        <button class="ctrl-btn" onclick="movePlayer('down')">↓</button>
+        <button class="ctrl-btn" onclick="movePlayer('right')">→</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="messageContainer">
+    <img src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" width="250" style="border-radius:15px; margin-bottom: 20px;">
+    <div class="typing-text" id="finalMessage"></div>
+  </div>
+
+  <!-- Audio -->
   <audio id="audioPlayer">
     <source src="Hanap-Hanap.mp3" type="audio/mpeg">
-    Your browser does not support audio.
   </audio>
 
   <script>
-    function showSurprise() {
-      // Show content
-      document.getElementById('surpriseContent').style.display = 'block';
+    const mazeCanvas = document.getElementById("mazeCanvas");
+    const ctx = mazeCanvas.getContext("2d");
 
-      // Play audio
-      const audio = document.getElementById('audioPlayer');
-      audio.volume = 1.0;
-      audio.play().catch(err => {
-        console.error("Audio failed to play:", err);
-        alert("Make sure your browser allows audio autoplay or interaction!");
-      });
+    const maze = [
+      [1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,1],
+      [1,0,1,0,1,0,1,1],
+      [1,0,1,0,0,0,0,1],
+      [1,0,1,1,1,1,0,1],
+      [1,0,0,0,0,1,0,1],
+      [1,1,1,1,0,1,0,1],
+      [1,1,1,1,0,0,0,1],
+      [1,1,1,1,1,1,2,1]
+    ];
+
+    const cellSize = 50;
+    let player = {x: 1, y: 1};
+
+    function drawMaze() {
+      ctx.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          const cell = maze[y][x];
+          if (cell === 1) {
+            ctx.fillStyle = "#333";
+          } else if (cell === 2) {
+            ctx.fillStyle = "#4CAF50"; // goal
+          } else {
+            ctx.fillStyle = "#fff";
+          }
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+
+      ctx.fillStyle = "#ff1493";
+      ctx.beginPath();
+      ctx.arc(player.x * cellSize + 25, player.y * cellSize + 25, 15, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function startMaze() {
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("mazeContainer").style.display = "flex";
+      drawMaze();
+    }
+
+    function movePlayer(direction) {
+      const {x, y} = player;
+      if (direction === "up" && maze[y-1][x] !== 1) player.y--;
+      if (direction === "down" && maze[y+1][x] !== 1) player.y++;
+      if (direction === "left" && maze[y][x-1] !== 1) player.x--;
+      if (direction === "right" && maze[y][x+1] !== 1) player.x++;
+      drawMaze();
+
+      if (maze[player.y][player.x] === 2) {
+        setTimeout(endMaze, 300);
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowUp") movePlayer("up");
+      if (e.key === "ArrowDown") movePlayer("down");
+      if (e.key === "ArrowLeft") movePlayer("left");
+      if (e.key === "ArrowRight") movePlayer("right");
+    });
+
+    function endMaze() {
+      document.getElementById("mazeContainer").style.display = "none";
+      document.getElementById("messageContainer").style.display = "flex";
+
+      launchConfetti();
+      document.getElementById("audioPlayer").play();
+      typeMessage("Hi [Insert Name Here]! 💖\nSurprise! I hope this made you smile today. 😊");
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 100; i++) {
+        let confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = Math.random() * window.innerWidth + "px";
+        confetti.style.animationDelay = Math.random() * 2 + "s";
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 3000);
+      }
+    }
+
+    function typeMessage(text) {
+      const msg = document.getElementById("finalMessage");
+      msg.innerHTML = "";
+      let index = 0;
+      const interval = setInterval(() => {
+        msg.innerHTML += text[index];
+        index++;
+        if (index === text.length) clearInterval(interval);
+      }, 50);
     }
   </script>
 
 </body>
 </html>
+
 
 
 
