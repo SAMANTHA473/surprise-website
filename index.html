@@ -7,61 +7,106 @@
     body {
       text-align: center;
       font-family: 'Arial', sans-serif;
-      background-color: #fff0f5;
-      margin-top: 100px;
+      background: linear-gradient(to right, #ff6a00, #ee0979);
+      background-size: cover;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 36px;
+      text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+      color: #ff1493;
+      margin-bottom: 30px;
+      font-family: 'Verdana', sans-serif;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: #ff1493;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: bold;
+      box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
+    }
+
+    button:hover {
+      background-color: #ff69b4;
     }
 
     #surpriseContent {
       display: none;
-      margin-top: 30px;
+      text-align: center;
+      margin-top: 50px;
+      animation: fadeIn 1.5s ease-out;
     }
 
     #surpriseImage {
-      width: 250px;
+      width: 300px;
       height: auto;
       margin: 20px 0;
-      animation: popIn 1s ease-out;
-      border-radius: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+      animation: bounce 1s infinite alternate;
     }
 
-    @keyframes popIn {
-      from { transform: scale(0); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
-    .note {
-      font-size: 20px;
-      color: #c71585;
-      margin-top: 10px;
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-20px); }
     }
 
     .name {
-      font-size: 28px;
+      font-size: 36px;
       font-weight: bold;
+      color: #fff;
+      text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.6);
+      margin-top: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .note {
+      font-size: 24px;
+      color: #ffb6c1;
+      margin-top: 15px;
+      font-style: italic;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    .star {
+      font-size: 60px;
       color: #ff1493;
+      animation: sparkle 1.5s infinite alternate;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #ff69b4;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #ff1493;
+    @keyframes sparkle {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.2); opacity: 0.6; }
     }
   </style>
 </head>
 <body>
+
   <h1>Click to Open Your Surprise!</h1>
   <button onclick="showSurprise()">Open Surprise</button>
 
   <div id="surpriseContent">
+    <div class="star">✨</div>
     <img id="surpriseImage" src="https://i.postimg.cc/dtqFSyVX/f9ac14e954a1282790bfad162ba2f4d9.jpg" alt="Surprise Image" />
     <div class="name">HANNABEE</div>
     <div class="note">Hi! Hope this made you smile!</div>
@@ -72,6 +117,8 @@
       document.getElementById("surpriseContent").style.display = "block";
     }
   </script>
+
 </body>
 </html>
+
 
