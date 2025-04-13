@@ -79,6 +79,13 @@
       text-align: justify;
     }
 
+    #finalImage {
+      display: none;
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 20px;
+    }
+
     .confetti {
       position: fixed;
       width: 10px;
@@ -118,6 +125,7 @@
   <div id="messageContainer">
     <h2>Congratulations! 🎉</h2>
     <div id="finalMessage"></div>
+    <img id="finalImage" src="https://i.postimg.cc/YC7HZDzt/images.jpg">
   </div>
 
   <audio id="audioPlayer">
@@ -206,13 +214,17 @@
 
     function typeMessage(text) {
       const msg = document.getElementById("finalMessage");
+      const finalImage = document.getElementById("finalImage");
       let index = 0;
       msg.innerHTML = "";
       const interval = setInterval(() => {
         msg.innerHTML += text[index];
         index++;
-        if (index === text.length) clearInterval(interval);
-      }, 50); // slower typing effect ~10s duration
+        if (index === text.length) {
+          clearInterval(interval);
+          finalImage.style.display = "block";
+        }
+      }, 50);
     }
 
     function launchConfetti() {
