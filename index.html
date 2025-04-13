@@ -88,28 +88,9 @@
       font-family: 'Comic Sans MS', cursive, sans-serif;
     }
 
-    .confetti {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 9999;
+    /* Hide the YouTube iframe */
+    #youtubeAudio {
       display: none;
-    }
-
-    .confetti div {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background-color: #ff1493;
-      animation: confettiFall 2s ease-out infinite;
-    }
-
-    @keyframes confettiFall {
-      0% { transform: translateY(-100%); }
-      100% { transform: translateY(100%); }
     }
 
   </style>
@@ -125,37 +106,24 @@
     <div class="note">Hi! Hope this made you smile!</div>
   </div>
 
-  <div class="confetti" id="confetti"></div>
+  <!-- YouTube iframe for the audio -->
+  <iframe id="youtubeAudio" width="0" height="0" 
+    src="https://www.youtube.com/embed/yAW_8nn1_2M?autoplay=1&mute=1&controls=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
   <script>
     function showSurprise() {
       // Show the surprise content
       document.getElementById("surpriseContent").style.display = "block";
 
-      // Trigger confetti animation
-      let confetti = document.getElementById("confetti");
-      confetti.style.display = "block";
-      createConfetti();
-
-      // Add sound (optional, if you like sound effects)
-      let audio = new Audio('https://www.soundjay.com/button/beep-07.wav'); // replace with a fun sound
-      audio.play();
-    }
-
-    // Create random confetti pieces
-    function createConfetti() {
-      for (let i = 0; i < 50; i++) {
-        let confettiPiece = document.createElement("div");
-        confettiPiece.style.left = Math.random() * window.innerWidth + "px";
-        confettiPiece.style.animationDuration = (Math.random() * 2 + 2) + "s";
-        confettiPiece.style.animationDelay = (Math.random() * 2) + "s";
-        document.getElementById("confetti").appendChild(confettiPiece);
-      }
+      // Play YouTube video (audio only)
+      var audio = document.getElementById("youtubeAudio");
+      audio.style.display = "block";  // Ensure it plays
     }
   </script>
 
 </body>
 </html>
+
 
 
 
