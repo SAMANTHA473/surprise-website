@@ -68,6 +68,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
     #finalMessage {
@@ -77,13 +78,6 @@
       white-space: pre-wrap;
       max-width: 90%;
       text-align: justify;
-    }
-
-    #finalImage {
-      display: none;
-      margin-top: 20px;
-      max-width: 90%;
-      border-radius: 20px;
     }
 
     .confetti {
@@ -125,7 +119,6 @@
   <div id="messageContainer">
     <h2>Congratulations! 🎉</h2>
     <div id="finalMessage"></div>
-    <img id="finalImage" src="https://i.postimg.cc/YC7HZDzt/images.jpg">
   </div>
 
   <audio id="audioPlayer">
@@ -209,12 +202,11 @@
       document.getElementById("messageContainer").style.display = "flex";
       launchConfetti();
       document.getElementById("audioPlayer").play();
-      typeMessage(`FOR HANNABEE \n\nHi! Hope this made you smile! 😊\nWala lang, trip ko lang gumawa ng mga gan'to pero para sayo talaga 'to lagi.\nHAHAHAHA. Di ko kasi alam kung kelan mawawala 'yung feelings ko for you,\nkaya habang crush pa kita, binibigay ko lang 'yung best ko para ipakita sayo.\nSabihin mo lang minsan kung annoying na ahhh!! 😅\n\nSana okay ka lang parati at ligtas ka.\nContinue mo lang 'yung journey mo sa dancing,\nhanggang di mo pa nakakasayaw si Niana! 💃\n\nI also hope na madagdagan pa 'yung mga gala natin or tambay, lalo pag nasa \nLolomboy ako. Pumayag ka minsan tumambay don, please? 😄\n\nYou deserve all the best surprises in life ✨`);
+      typeMessage(`FOR HANNABEE \n\nCongratulations! 🎉\nHi! Hope this made you smile! 😊\nWala lang, trip ko lang gumawa ng mga gan'to pero para sayo talaga 'to lagi.\nHAHAHAHA. Di ko kasi alam kung kelan mawawala 'yung feelings ko for you,\nkaya habang crush pa kita, binibigay ko lang 'yung best ko para ipakita sayo.\nSabihin mo lang minsan kung annoying na ahhh!! 😅\n\nSana okay ka lang parati at ligtas ka.\nContinue mo lang 'yung journey mo sa dancing,\nhanggang di mo pa nakakasayaw si Niana! 💃\n\nI also hope na madagdagan pa 'yung mga gala natin or tambay, lalo pag nasa \nLolomboy ako. Pumayag ka minsan tumambay don, please? 😄\n\nYou deserve all the best surprises in life ✨`, showImageAfterMessage);
     }
 
-    function typeMessage(text) {
+    function typeMessage(text, callback) {
       const msg = document.getElementById("finalMessage");
-      const finalImage = document.getElementById("finalImage");
       let index = 0;
       msg.innerHTML = "";
       const interval = setInterval(() => {
@@ -222,9 +214,20 @@
         index++;
         if (index === text.length) {
           clearInterval(interval);
-          finalImage.style.display = "block";
+          if (callback) callback();
         }
       }, 50);
+    }
+
+    function showImageAfterMessage() {
+      const img = document.createElement("img");
+      img.src = "https://i.postimg.cc/YC7HZDzt/images.jpg";
+      img.alt = "Surprise Image";
+      img.style.maxWidth = "90%";
+      img.style.marginTop = "20px";
+      img.style.borderRadius = "20px";
+      img.style.boxShadow = "0 0 20px rgba(255, 105, 180, 0.5)";
+      document.getElementById("messageContainer").appendChild(img);
     }
 
     function launchConfetti() {
@@ -242,6 +245,7 @@
   </script>
 </body>
 </html>
+
 
 
 
